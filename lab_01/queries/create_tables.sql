@@ -46,24 +46,24 @@ CREATE TABLE rel_bands_cooperate_labels (
     id_label INTEGER NOT NULL,
     c_start DATE NOT NULL,
     c_end DATE NOT NULL,
-    FOREIGN KEY (id_band) REFERENCES band(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_label) REFERENCES label(id) ON DELETE CASCADE
+    FOREIGN KEY (id_band) REFERENCES bands(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_label) REFERENCES labels(id) ON DELETE CASCADE
 );
 
 CREATE TABLE rel_bands_sing_songs (
     id INTEGER PRIMARY KEY,
     id_band INTEGER NOT NULL,
     id_song INTEGER NOT NULL,
-    FOREIGN KEY (id_band) REFERENCES band(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE
+    FOREIGN KEY (id_band) REFERENCES bands(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE rel_albums_contain_songs (
     id INTEGER PRIMARY KEY,
     id_album INTEGER NOT NULL,
     id_song INTEGER NOT NULL,
-    FOREIGN KEY (id_album) REFERENCES album(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE
+    FOREIGN KEY (id_album) REFERENCES albums(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE rel_listeners_rate_songs (
@@ -72,6 +72,6 @@ CREATE TABLE rel_listeners_rate_songs (
     time TIME NOT NULL,
     id_song INTEGER NOT NULL,
     id_listener INTEGER NOT NULL,
-    FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_listener) REFERENCES listener(id) ON DELETE CASCADE
+    FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_listener) REFERENCES listeners(id) ON DELETE CASCADE
 );
