@@ -3,7 +3,7 @@
 Запуск docker контейнера
 
 ```sh
-docker run --name mypostgres -e POSTGRES_PASSWORD=mysecret -d -p 5432:5432 postgres
+docker run --name mypostgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
 ```
 
 Создание пользователя, базы данных и передача прав на бд пользователю
