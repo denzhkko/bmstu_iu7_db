@@ -1,4 +1,4 @@
-CREATE TABLE label (
+CREATE TABLE labels (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     founder TEXT NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE label (
     about TEXT
 );
 
-CREATE TABLE band (
+CREATE TABLE bands (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     year INTEGER NOT NULL,
@@ -15,7 +15,32 @@ CREATE TABLE band (
     about TEXT
 );
 
-CREATE TABLE med_band_label (
+CREATE TABLE songs (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    genre TEXT NOT NULL,
+    language TEXT,
+    about TEXT
+);
+
+CREATE TABLE albums (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    year INTEGER NOT NULL,
+    about TEXT
+);
+
+CREATE TABLE listeners (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    gender TEXT,
+    birth DATE,
+    email TEXT NOT NULL,
+    pwd_hash TEXT NOT NULL
+);
+
+
+CREATE TABLE rel_bands_cooperate_labels (
     id INTEGER PRIMARY KEY,
     id_band INTEGER NOT NULL,
     id_label INTEGER NOT NULL,
@@ -25,15 +50,7 @@ CREATE TABLE med_band_label (
     FOREIGN KEY (id_label) REFERENCES label(id) ON DELETE CASCADE
 );
 
-CREATE TABLE song (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    genre TEXT NOT NULL,
-    language TEXT,
-    about TEXT
-);
-
-CREATE TABLE med_band_song (
+CREATE TABLE rel_bands_sing_songs (
     id INTEGER PRIMARY KEY,
     id_band INTEGER NOT NULL,
     id_song INTEGER NOT NULL,
@@ -41,14 +58,7 @@ CREATE TABLE med_band_song (
     FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE
 );
 
-CREATE TABLE album (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    year INTEGER NOT NULL,
-    about TEXT
-);
-
-CREATE TABLE med_album_song (
+CREATE TABLE rel_albums_contain_songs (
     id INTEGER PRIMARY KEY,
     id_album INTEGER NOT NULL,
     id_song INTEGER NOT NULL,
@@ -56,16 +66,7 @@ CREATE TABLE med_album_song (
     FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE
 );
 
-CREATE TABLE listener (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    gender TEXT,
-    birth DATE,
-    email TEXT NOT NULL,
-    pwd_hash TEXT NOT NULL
-);
-
-CREATE TABLE med_listener_song_rating(
+CREATE TABLE rel_listeners_rate_songs (
     id INTEGER PRIMARY KEY,
     rating INTEGER NOT NULL,
     time TIME NOT NULL,
