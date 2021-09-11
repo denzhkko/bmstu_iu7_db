@@ -56,13 +56,6 @@ CREATE TABLE med_album_song (
     FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE
 );
 
-CREATE TABLE songrating (
-    id INTEGER PRIMARY KEY,
-    rating INTEGER NOT NULL,
-    time TIME NOT NULL,
-    id_song INTEGER NOT NULL
-);
-
 CREATE TABLE listener (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -72,10 +65,12 @@ CREATE TABLE listener (
     pwd_hash TEXT NOT NULL
 );
 
-CREATE TABLE med_listener_songrating (
+CREATE TABLE med_listener_song_rating(
     id INTEGER PRIMARY KEY,
+    rating INTEGER NOT NULL,
+    time TIME NOT NULL,
+    id_song INTEGER NOT NULL,
     id_listener INTEGER NOT NULL,
-    id_songrating INTEGER NOT NULL,
-    FOREIGN KEY (id_listener) REFERENCES listener(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_songrating) REFERENCES songrating(id) ON DELETE CASCADE
+    FOREIGN KEY (id_song) REFERENCES song(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_listener) REFERENCES listener(id) ON DELETE CASCADE
 );
