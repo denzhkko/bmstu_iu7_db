@@ -1,19 +1,25 @@
+## Зависимости
+
+- docker
+- psql
+
+Python modules:
+
+- faker
+- faker\_music
+
 ## Запуск
 
 Запуск docker контейнера
 
 ```sh
-docker run --name mypostgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
-```
+python3 gen_table_data.py
 
-Создание пользователя, базы данных и передача прав на бд пользователю
+docker-compose up -d
 
-```sh
-psql -h localhost -p 5432 -U postgres -W -f create_user.sql
-```
-
-Создание таблиц
-
-```sh
-psql -h localhost -p 5432 -U deniska -d musicdb -W -f create_tables.sql
+psql -h localhost -p 5432 -U postgres -W -f queries/create_user.sql
+psql -h localhost -p 5432 -U deniska -d musicdb -W \
+        -f queries/create_tables.sql
+psql -h localhost -p 5432 -U deniska -d musicdb -W \
+        -f queries/fill_out_tables.sql
 ```
