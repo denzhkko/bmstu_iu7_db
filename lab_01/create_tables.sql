@@ -29,7 +29,7 @@ CREATE TABLE song (
     id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     genre TEXT NOT NULL,
-    duration INTERVAL NOT NULL,
+    language TEXT,
     about TEXT
 );
 
