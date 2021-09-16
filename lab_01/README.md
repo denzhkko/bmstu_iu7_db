@@ -1,6 +1,7 @@
 ## Зависимости
 
 - docker
+- docker-compose
 - psql
 
 Python modules:
@@ -9,8 +10,6 @@ Python modules:
 - faker\_music
 
 ## Запуск
-
-Запуск docker контейнера
 
 ```sh
 python3 gen_table_data.py
