@@ -1,3 +1,8 @@
 # csv dir
 
 **/datasheets/**
+
+
+# python cache dir
+
+**/__pycache__/**
