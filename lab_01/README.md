@@ -22,3 +22,16 @@ psql -h localhost -p 5432 -U deniska -d musicdb -W \
 psql -h localhost -p 5432 -U deniska -d musicdb -W \
         -f queries/fill_out_tables.sql
 ```
+
+### Дополнительное задание
+
+Добавить к таблице listener поля (мигрировать базу данных):
+
+* язык
+* страна
+
+```sh
+python3 gen_migr_1_2.py
+
+psql -h localhost -p 5432 -U deniska -d musicdb -W -f queries/migr_1_2.sql
+```
