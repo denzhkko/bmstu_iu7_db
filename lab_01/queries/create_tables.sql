@@ -69,7 +69,7 @@ CREATE TABLE rel_albums_contain_songs (
 CREATE TABLE rel_listeners_rate_songs (
     id INTEGER PRIMARY KEY,
     rating INTEGER NOT NULL,
-    time TIME NOT NULL,
+    time TIMESTAMP NOT NULL,
     id_song INTEGER NOT NULL,
     id_listener INTEGER NOT NULL,
     FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE,

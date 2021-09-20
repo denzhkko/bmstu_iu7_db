@@ -186,7 +186,7 @@ def gen_rel_listeners_rate_songs():
             writer.writerow([
                 i + 1,
                 random.randint(1, 5),
-                faker.time(),
+                faker.date_time(),
                 random.randint(1, RC_LISTENERS),
                 random.randint(1, RC_SONGS)
                 ])
