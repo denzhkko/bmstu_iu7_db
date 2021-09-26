@@ -3,11 +3,13 @@
 - docker
 - docker-compose
 - psql
+- python3
 
 Python modules:
 
 - faker
 - faker\_music
+- psycopg2, psycopg2-binary
 
 ## Запуск
 

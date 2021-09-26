@@ -15,6 +15,12 @@ RC_SONGS = T_ROW_COUNT_DEF
 RC_ALBUMS = T_ROW_COUNT_DEF
 RC_LISTENERS = T_ROW_COUNT_DEF
 
+uuid_labels = []
+uuid_bands = []
+uuid_songs = []
+uuid_albums = []
+uuid_listeners = []
+
 RC_REL_BCL = T_ROW_COUNT_DEF
 RC_REL_BSS = T_ROW_COUNT_DEF
 RC_REL_ACS = T_ROW_COUNT_DEF
@@ -42,14 +48,16 @@ def gen_labels():
         writer = csv.writer(csvfile, delimiter=',')
 
         for i in range(t_row_count):
+            id = faker.unique.uuid4()
             writer.writerow([
-                i + 1,
+                id,
                 faker.company(),
                 faker.name(),
                 faker.year(),
                 faker.country(),
                 faker.text()
                 ])
+            uuid_labels.append(id)
 
 
 def gen_bands():
@@ -60,8 +68,9 @@ def gen_bands():
         writer = csv.writer(csvfile, delimiter=',')
 
         for i in range(t_row_count):
+            id = faker.unique.uuid4()
             writer.writerow([
-                i + 1,
+                id,
                 # no way to gen band name.
                 # coming soon by faker_music provider
                 faker.sentence(random.randint(1, 3)),
@@ -69,6 +78,7 @@ def gen_bands():
                 faker.country(),
                 faker.text()
                 ])
+            uuid_bands.append(id)
 
 
 def gen_songs():
@@ -79,14 +89,16 @@ def gen_songs():
         writer = csv.writer(csvfile, delimiter=',')
 
         for i in range(t_row_count):
+            id = faker.unique.uuid4()
             writer.writerow([
-                i + 1,
+                id,
                 # no way to gen song name
                 faker.sentence(random.randint(1, 3)),
                 faker.music_genre(),
                 faker.language_name(),
                 faker.text()
                 ])
+            uuid_songs.append(id)
 
 
 def gen_albums():
@@ -97,14 +109,15 @@ def gen_albums():
         writer = csv.writer(csvfile, delimiter=',')
 
         for i in range(t_row_count):
+            id = faker.unique.uuid4()
             writer.writerow([
-                i + 1,
+                id,
                 # no way to gen album name
                 faker.sentence(random.randint(1, 3)),
                 faker.year(),
                 faker.text()
                 ])
-
+            uuid_albums.append(id)
 
 def gen_listeners():
     filename = CSV_DIRNAME + "/listeners.csv"
@@ -114,14 +127,16 @@ def gen_listeners():
         writer = csv.writer(csvfile, delimiter=',')
 
         for i in range(t_row_count):
+            id = faker.unique.uuid4()
             writer.writerow([
-                i + 1,
+                id,
                 faker.name(),
                 random.choice(genders),
                 faker.date_of_birth(),
                 faker.ascii_email(),
                 faker.sha256()
                 ])
+            uuid_listeners.append(id)
 
 
 def gen_rel_bands_cooperate_labels():
@@ -137,9 +152,9 @@ def gen_rel_bands_cooperate_labels():
                 date_s, date_e = date_e, date_s
 
             writer.writerow([
-                i + 1,
-                random.randint(1, RC_BANDS),
-                random.randint(1, RC_LABELS),
+                faker.unique.uuid4(),
+                random.choice(uuid_bands),
+                random.choice(uuid_labels),
                 date_s,
                 date_e
                 ])
@@ -154,9 +169,9 @@ def gen_rel_bands_sing_songs():
 
         for i in range(t_row_count):
             writer.writerow([
-                i + 1,
-                random.randint(1, RC_BANDS),
-                random.randint(1, RC_SONGS)
+                faker.unique.uuid4(),
+                random.choice(uuid_bands),
+                random.choice(uuid_songs),
                 ])
 
 
@@ -169,9 +184,9 @@ def gen_rel_albums_contain_songs():
 
         for i in range(t_row_count):
             writer.writerow([
-                i + 1,
-                random.randint(1, RC_ALBUMS),
-                random.randint(1, RC_SONGS)
+                faker.unique.uuid4(),
+                random.choice(uuid_albums),
+                random.choice(uuid_songs)
                 ])
 
 
@@ -184,11 +199,11 @@ def gen_rel_listeners_rate_songs():
 
         for i in range(t_row_count):
             writer.writerow([
-                i + 1,
+                faker.unique.uuid4(),
                 random.randint(1, 5),
                 faker.date_time(),
-                random.randint(1, RC_LISTENERS),
-                random.randint(1, RC_SONGS)
+                random.choice(uuid_songs),
+                random.choice(uuid_listeners)
                 ])
 
 

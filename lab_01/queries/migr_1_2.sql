@@ -1,8 +1,10 @@
 ALTER TABLE listeners ADD language TEXT;
 ALTER TABLE listeners ADD country TEXT;
 
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TEMP TABLE tmp_listeners_lc (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY,
     language TEXT NOT NULL,
     country TEXT NOT NULL
 );

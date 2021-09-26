@@ -1,5 +1,7 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE labels (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     founder TEXT NOT NULL,
     year INTEGER NOT NULL,
@@ -8,7 +10,7 @@ CREATE TABLE labels (
 );
 
 CREATE TABLE bands (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     year INTEGER NOT NULL,
     country TEXT NOT NULL,
@@ -16,7 +18,7 @@ CREATE TABLE bands (
 );
 
 CREATE TABLE songs (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     genre TEXT NOT NULL,
     language TEXT,
@@ -24,14 +26,14 @@ CREATE TABLE songs (
 );
 
 CREATE TABLE albums (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     year INTEGER NOT NULL,
     about TEXT
 );
 
 CREATE TABLE listeners (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     gender TEXT,
     birth DATE,
@@ -41,9 +43,9 @@ CREATE TABLE listeners (
 
 
 CREATE TABLE rel_bands_cooperate_labels (
-    id INTEGER PRIMARY KEY,
-    id_band INTEGER NOT NULL,
-    id_label INTEGER NOT NULL,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_band UUID NOT NULL,
+    id_label UUID NOT NULL,
     c_start DATE NOT NULL,
     c_end DATE NOT NULL,
     FOREIGN KEY (id_band) REFERENCES bands(id) ON DELETE CASCADE,
@@ -51,27 +53,27 @@ CREATE TABLE rel_bands_cooperate_labels (
 );
 
 CREATE TABLE rel_bands_sing_songs (
-    id INTEGER PRIMARY KEY,
-    id_band INTEGER NOT NULL,
-    id_song INTEGER NOT NULL,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_band UUID NOT NULL,
+    id_song UUID NOT NULL,
     FOREIGN KEY (id_band) REFERENCES bands(id) ON DELETE CASCADE,
     FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE rel_albums_contain_songs (
-    id INTEGER PRIMARY KEY,
-    id_album INTEGER NOT NULL,
-    id_song INTEGER NOT NULL,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id_album UUID NOT NULL,
+    id_song UUID NOT NULL,
     FOREIGN KEY (id_album) REFERENCES albums(id) ON DELETE CASCADE,
     FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE rel_listeners_rate_songs (
-    id INTEGER PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     rating INTEGER NOT NULL,
     time TIMESTAMP NOT NULL,
-    id_song INTEGER NOT NULL,
-    id_listener INTEGER NOT NULL,
+    id_song UUID NOT NULL,
+    id_listener UUID NOT NULL,
     FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE,
     FOREIGN KEY (id_listener) REFERENCES listeners(id) ON DELETE CASCADE
 );
