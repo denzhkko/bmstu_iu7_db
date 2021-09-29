@@ -206,6 +206,44 @@ def gen_rel_listeners_rate_songs():
                 random.choice(uuid_listeners)
                 ])
 
+def gen_rel_listeners_comment_songs():
+    filename = CSV_DIRNAME + "/rel_listeners_comment_songs.csv"
+    t_row_count = RC_REL_LRS
+
+    with open(filename, 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',')
+
+        for id_song in uuid_songs:
+
+            parent_comment_count = random.randint(0, 10)
+            for _ in range(parent_comment_count):
+                available_ids = []
+
+                id = faker.unique.uuid4()
+                available_ids.append(id)
+
+                writer.writerow([
+                    id,  # id
+                    faker.text(),  # text
+                    'null',  # parent comment
+                    faker.date_time(),  # timestamp
+                    id_song,  # id song
+                    random.choice(uuid_listeners)  # id listener
+                    ])
+
+                child_commnet_count = random.randint(0, 10)
+                for _ in range(child_commnet_count):
+                    id = faker.unique.uuid4()
+                    available_ids.append(id)
+                    writer.writerow([
+                        id,  # id
+                        faker.text(),  # text
+                        random.choice(available_ids),  # parent comment
+                        faker.date_time(),  # timestamp
+                        id_song,  # id song
+                        random.choice(uuid_listeners)  # id listener
+                        ])
+
 
 def main():
     create_csv_dir()
@@ -220,6 +258,7 @@ def main():
     gen_rel_bands_sing_songs()
     gen_rel_albums_contain_songs()
     gen_rel_listeners_rate_songs()
+    gen_rel_listeners_comment_songs()
 
 
 main()

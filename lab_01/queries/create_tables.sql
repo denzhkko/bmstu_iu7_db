@@ -77,3 +77,15 @@ CREATE TABLE rel_listeners_rate_songs (
     FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE,
     FOREIGN KEY (id_listener) REFERENCES listeners(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE rel_listeners_comment_songs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    txt TEXT NOT NULL,
+    parent UUID,
+    time TIMESTAMP NOT NULL DEFAULT now(),
+    id_song UUID NOT NULL,
+    id_listener UUID NOT NULL,
+    FOREIGN KEY (id_song) REFERENCES songs(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_listener) REFERENCES listeners(id) ON DELETE CASCADE
+);

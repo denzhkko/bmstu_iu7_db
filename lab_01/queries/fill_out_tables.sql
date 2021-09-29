@@ -20,3 +20,7 @@ DELIMITER ',' CSV;
 COPY rel_listeners_rate_songs
 FROM '/var/lib/postgresql/mydata/rel_listeners_rate_songs.csv'
 DELIMITER ',' CSV;
+
+COPY rel_listeners_comment_songs
+FROM '/var/lib/postgresql/mydata/rel_listeners_comment_songs.csv'
+DELIMITER ',' NULL AS 'null' CSV;
