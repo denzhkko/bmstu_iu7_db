@@ -1,0 +1,12 @@
+# build dirs
+build/
+cmake-build-debug/
+
+# vim
+tags
+
+# format
+.clang-format
+
+# jetbrain
+.idea
