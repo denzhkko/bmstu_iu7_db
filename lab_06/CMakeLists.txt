@@ -28,7 +28,11 @@ file(GLOB APP_FILES
 add_executable(server ${APP_FILES})
 
 add_subdirectory(libs/ozo/)
-target_link_libraries(server PRIVATE yandex::ozo)
+add_subdirectory(libs/inja)
+target_link_libraries(server PRIVATE
+        yandex::ozo
+        pantor::inja
+        )
 
 if (NOT WIN32)
     find_package(Threads)

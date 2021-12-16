@@ -1,3 +1,6 @@
 [submodule "lab_06/libs/ozo"]
 	path = lab_06/libs/ozo
 	url = git@github.com:yandex/ozo.git
+[submodule "lab_06/libs/inja"]
+	path = lab_06/libs/inja
+	url = git@github.com:pantor/inja.git

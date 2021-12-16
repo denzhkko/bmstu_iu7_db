@@ -1,9 +1,12 @@
 #include "http_session.hpp"
 #include <iostream>
+#include <string>
 
 #include <ozo/connection_info.h>
 #include <ozo/request.h>
 #include <ozo/shortcuts.h>
+
+#include <inja/inja.hpp>
 
 // Append an HTTP rel-path to a local filesystem path.
 // The returned path is normalized for the platform.
@@ -78,7 +81,8 @@ void http_session::on_read(error_code ec, std::size_t) {
 
     ozo::request(
         ozo::make_connector(conn_info, ioc_), query, ozo::into(*rows_ptr),
-        [self = shared_from_this(), rows_ptr](ozo::error_code ec, auto conn) {
+        [self = shared_from_this(), rows_ptr, query](ozo::error_code ec,
+                                                     auto conn) {
           if (ec) {
             std::cerr << ec.message() << ozo::error_message(conn) << std::endl;
             return;
@@ -86,12 +90,21 @@ void http_session::on_read(error_code ec, std::size_t) {
 
           std::int64_t answer = std::get<0>((*rows_ptr)[0]);
 
+          inja::json data;
+          data["title"] = std::string{"Scalar request"};
+          data["query"] = ozo::to_const_char(query.build().text);
+          data["res"] = answer;
+
+          inja::Environment env;
+          inja::Template temp = env.parse_template("./templates/scaler.html");
+          std::string page = env.render(temp, data);
+
           http::response<http::string_body> res{http::status::bad_request,
                                                 self->req_.version()};
           res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
           res.set(http::field::content_type, "text/html");
           res.keep_alive(self->req_.keep_alive());
-          res.body() = std::string{"Songs cnt: "} + std::to_string(answer);
+          res.body() = page;
           res.prepare_payload();
 
           self->do_write(res);
