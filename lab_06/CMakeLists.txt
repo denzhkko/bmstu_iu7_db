@@ -27,6 +27,9 @@ file(GLOB APP_FILES
 
 add_executable(server ${APP_FILES})
 
+add_subdirectory(libs/ozo/)
+target_link_libraries(server PRIVATE yandex::ozo)
+
 if (NOT WIN32)
     find_package(Threads)
     target_link_libraries(server PRIVATE Threads::Threads ${Boost_SYSTEM_LIBRARY})

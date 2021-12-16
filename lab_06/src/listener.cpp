@@ -2,13 +2,9 @@
 #include "http_session.hpp"
 #include <iostream>
 
-listener::listener(net::io_context& ioc,
-                   tcp::endpoint endpoint,
-                   std::shared_ptr<shared_state> const& state)
-  : acceptor_(ioc)
-  , socket_(ioc)
-  , state_(state)
-{
+listener::listener(net::io_context &ioc, tcp::endpoint endpoint,
+                   std::shared_ptr<shared_state> const &state)
+    : acceptor_(ioc), socket_(ioc), state_(state), ioc_(ioc) {
   error_code ec;
 
   // Open the acceptor
@@ -40,9 +36,7 @@ listener::listener(net::io_context& ioc,
   }
 }
 
-void
-listener::run()
-{
+void listener::run() {
   // Start accepting a connection
   acceptor_.async_accept(socket_, [self = shared_from_this()](error_code ec) {
     self->on_accept(ec);
@@ -50,9 +44,7 @@ listener::run()
 }
 
 // Report a failure
-void
-listener::fail(error_code ec, char const* what)
-{
+void listener::fail(error_code ec, char const *what) {
   // Don't report on canceled operations
   if (ec == net::error::operation_aborted)
     return;
@@ -60,14 +52,12 @@ listener::fail(error_code ec, char const* what)
 }
 
 // Handle a connection
-void
-listener::on_accept(error_code ec)
-{
+void listener::on_accept(error_code ec) {
   if (ec)
     return fail(ec, "accept");
   else
     // Launch a new session for this connection
-    std::make_shared<http_session>(std::move(socket_), state_)->run();
+    std::make_shared<http_session>(std::move(socket_), state_, ioc_)->run();
 
   // Accept another connection
   acceptor_.async_accept(socket_, [self = shared_from_this()](error_code ec) {

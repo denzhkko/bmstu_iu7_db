@@ -1,6 +1,10 @@
 #include "http_session.hpp"
 #include <iostream>
 
+#include <ozo/connection_info.h>
+#include <ozo/request.h>
+#include <ozo/shortcuts.h>
+
 // Append an HTTP rel-path to a local filesystem path.
 // The returned path is normalized for the platform.
 std::string path_cat(boost::beast::string_view base,
@@ -26,8 +30,9 @@ std::string path_cat(boost::beast::string_view base,
 }
 
 http_session::http_session(tcp::socket socket,
-                           std::shared_ptr<shared_state> const &state)
-    : socket_(std::move(socket)), state_(state) {}
+                           std::shared_ptr<shared_state> const &state,
+                           net::io_context &ioc)
+    : socket_(std::move(socket)), state_(state), ioc_(ioc) {}
 
 void http_session::run() {
   // Read a request
@@ -58,15 +63,50 @@ void http_session::on_read(error_code ec, std::size_t) {
   if (ec)
     return fail(ec, "read");
 
-  http::response<http::string_body> res{http::status::bad_request,
-                                        req_.version()};
-  res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
-  res.set(http::field::content_type, "text/html");
-  res.keep_alive(req_.keep_alive());
-  res.body() = std::string{"Deniska"};
-  res.prepare_payload();
+  std::cout << req_.target() << std::endl;
+  if ("/song_cnt" == req_.target()) {
+    std::cout << "DB request required" << std::endl;
+    //    ozo::rows_of<std::int64_t> rows;
+    auto rows_ptr = std::make_shared<ozo::rows_of<std::int64_t>>();
 
-  do_write(res);
+    ozo::connection_info conn_info("host=localhost port=5432 user=deniska "
+                                   "password=deniska dbname=musicdb");
+
+    using namespace ozo::literals;
+
+    const auto query = "SELECT count(*) FROM songs"_SQL;
+
+    ozo::request(
+        ozo::make_connector(conn_info, ioc_), query, ozo::into(*rows_ptr),
+        [self = shared_from_this(), rows_ptr](ozo::error_code ec, auto conn) {
+          if (ec) {
+            std::cerr << ec.message() << ozo::error_message(conn) << std::endl;
+            return;
+          }
+
+          std::int64_t answer = std::get<0>((*rows_ptr)[0]);
+
+          http::response<http::string_body> res{http::status::bad_request,
+                                                self->req_.version()};
+          res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+          res.set(http::field::content_type, "text/html");
+          res.keep_alive(self->req_.keep_alive());
+          res.body() = std::string{"Songs cnt: "} + std::to_string(answer);
+          res.prepare_payload();
+
+          self->do_write(res);
+        });
+  } else {
+    http::response<http::string_body> res{http::status::bad_request,
+                                          req_.version()};
+    res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+    res.set(http::field::content_type, "text/html");
+    res.keep_alive(req_.keep_alive());
+    res.body() = std::string{"Deniska"};
+    res.prepare_payload();
+
+    do_write(res);
+  }
 }
 
 void http_session::do_write(http::response<http::string_body> const &res) {

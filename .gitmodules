@@ -1,0 +1,3 @@
+[submodule "lab_06/libs/ozo"]
+	path = lab_06/libs/ozo
+	url = git@github.com:yandex/ozo.git
