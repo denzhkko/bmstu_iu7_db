@@ -109,6 +109,48 @@ void http_session::on_read(error_code ec, std::size_t) {
 
           self->do_write(res);
         });
+  } else if ("/table" == req_.target()) {
+    std::cout << "ttt" << std::endl;
+    std::cout << "DB request required" << std::endl;
+    //    ozo::rows_of<std::int64_t> rows;
+    auto rows_ptr = std::make_shared<ozo::rows_of<std::string, std::string>>();
+
+    ozo::connection_info conn_info("host=localhost port=5432 user=deniska "
+                                   "password=deniska dbname=musicdb");
+
+    using namespace ozo::literals;
+
+    const auto query =
+        "SELECT b.name, s.name FROM songs s  JOIN rel_bands_sing_songs r ON s.id = r.id_song JOIN bands b ON r.id_band = b.id WHERE s.language = 'English' "_SQL;
+
+    ozo::request(
+        ozo::make_connector(conn_info, ioc_), query, ozo::into(*rows_ptr),
+        [self = shared_from_this(), rows_ptr, query](ozo::error_code ec,
+                                                     auto conn) {
+          if (ec) {
+            std::cerr << ec.message() << ozo::error_message(conn) << std::endl;
+            return;
+          }
+
+          inja::json data;
+          data["table"] = *rows_ptr;
+          data["query"] = ozo::to_const_char(query.build().text);
+          data["tablename"] = "Песни на русском";
+
+          inja::Environment env;
+          inja::Template temp = env.parse_template("./templates/table.html");
+          std::string page = env.render(temp, data);
+
+          http::response<http::string_body> res{http::status::bad_request,
+                                                self->req_.version()};
+          res.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+          res.set(http::field::content_type, "text/html");
+          res.keep_alive(self->req_.keep_alive());
+          res.body() = page;
+          res.prepare_payload();
+
+          self->do_write(res);
+        });
   } else {
     http::response<http::string_body> res{http::status::bad_request,
                                           req_.version()};

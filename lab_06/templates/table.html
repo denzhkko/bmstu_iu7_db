@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta charset="utf-8">
+      <title>{{ default(title, "Deniska title") }}</title>
+    </head>
+    <body>
+      <p>Query:</p>
+      <pre>{{ query }}</pre>
+      <h4>{{ tablename }}</h4>
+
+      <table border="1">
+        {% for row in table %}
+        <tr>
+          {% for value in row %}
+          <td>{{ value }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </table>
+    </body>
+</html>
+
